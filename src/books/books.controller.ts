@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
@@ -18,27 +18,27 @@ export class BooksController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     try {
-      return this.booksService.findOne(+id);
+      return this.booksService.findOne(id);
     } catch (err) {
       throw new NotFoundException();
     }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateBookDto: UpdateBookDto) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateBookDto: UpdateBookDto) {
     try {
-      return this.booksService.update(+id, updateBookDto);
+      return this.booksService.update(id, updateBookDto);
     } catch (err) {
       throw new NotFoundException();
     }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     try {
-      return this.booksService.remove(+id);
+      return this.booksService.remove(id);
     } catch (err) {
       throw new NotFoundException();
     }

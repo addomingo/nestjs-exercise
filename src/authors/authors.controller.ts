@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe } from '@nestjs/common';
 import { AuthorsService } from './authors.service';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
@@ -18,27 +18,27 @@ export class AuthorsController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
+  findOne(@Param('id', ParseIntPipe) id: number) {
     try {
-      return this.authorsService.findOne(+id);
+      return this.authorsService.findOne(id);
     } catch (err) {
       throw new NotFoundException();
     }
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateAuthorDto: UpdateAuthorDto) {
+  update(@Param('id', ParseIntPipe) id: number, @Body() updateAuthorDto: UpdateAuthorDto) {
     try {
-      return this.authorsService.update(+id, updateAuthorDto);
+      return this.authorsService.update(id, updateAuthorDto);
     } catch (err) {
       throw new NotFoundException();
     }
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  remove(@Param('id', ParseIntPipe) id: number) {
     try {
-      return this.authorsService.remove(+id);
+      return this.authorsService.remove(id);
     } catch (err) {
       throw new NotFoundException();
     }
