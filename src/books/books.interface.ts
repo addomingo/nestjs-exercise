@@ -1,8 +1,8 @@
 export interface Book {
     id: number;
     name: string;
-    authorId: string;
+    authorIds: number[];
     genre: string[];
     datePublished: Date;
-    coverImage: string;
+    coverImage?: string;
 }

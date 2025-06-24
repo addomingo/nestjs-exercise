@@ -1,7 +1,20 @@
+import { ArrayNotEmpty, IsDate, IsEnum, IsString, MinLength } from "class-validator";
+
 export class CreateBookDto {
+    @IsString()
+    @MinLength(1)
     name: string;
-    authorId: string;
+
+    @ArrayNotEmpty()
+    authorIds: number[];
+
+    @ArrayNotEmpty()
+    @IsEnum(['romance', 'horror', 'sci-fi', 'psychological', 'non-fiction', 'fiction'])
     genre: string[];
+
+    @IsDate()
     datePublished: Date;
-    coverImage: string;
+    
+    @IsString()
+    coverImage?: string;
 }
