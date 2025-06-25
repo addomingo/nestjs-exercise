@@ -1,20 +1,25 @@
-import { ArrayNotEmpty, IsDate, IsEnum, IsString, MinLength } from "class-validator";
+import { ArrayNotEmpty, IsArray, IsDateString, IsEnum, IsInt, IsOptional, IsString, MinLength } from "class-validator";
+import { Genre } from "../books.interface";
 
 export class CreateBookDto {
     @IsString()
     @MinLength(1)
     name: string;
 
+    @IsArray()
     @ArrayNotEmpty()
+    @IsInt({each: true})
     authorIds: number[];
 
+    @IsArray()
     @ArrayNotEmpty()
-    @IsEnum(['romance', 'horror', 'sci-fi', 'psychological', 'non-fiction', 'fiction'])
-    genre: string[];
+    @IsEnum(Genre, { each: true })
+    genre: Genre[];
 
-    @IsDate()
-    datePublished: Date;
+    @IsDateString()
+    datePublished: string;
     
+    @IsOptional()
     @IsString()
     coverImage?: string;
 }

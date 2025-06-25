@@ -1,20 +1,30 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
-import { Book } from './books.interface';
+import { Book, Genre } from './books.interface';
 import { BookDuplicateException } from './books.exception';
+import { AuthorsService } from 'src/authors/authors.service';
 
 @Injectable()
 export class BooksService {
   private readonly books: Book[] = [];
   private currId = 1;
 
+  constructor(private readonly authorsService: AuthorsService) {} // inject AuthorsService
+
   // This action adds a new Book
   create(createBookDto: CreateBookDto): Book {
     const existingBook = this.books.find(book => createBookDto.name === book.name);
-
     if (existingBook) {
       throw new BookDuplicateException();
+    }
+
+    for (const id of createBookDto.authorIds) {
+      try {
+        this.authorsService.findOne(id);
+      } catch (err) {
+        throw new BadRequestException(`Author with ID ${id} does not exist`);
+      }
     }
 
     const newBook: Book = {
