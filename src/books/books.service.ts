@@ -94,7 +94,7 @@ export class BooksService {
   addAuthorToBook(authorId: number, bookId: number) {
     // const author = this.authorsService.findOne(authorId);
     this.authorsService.findOne(authorId);
-    const book = this.findOne(authorId);
+    const book = this.findOne(bookId);
 
     if (book.authorIds.includes(authorId)) {
       throw new DuplicateAuthorBookReferenceException(authorId, bookId);
@@ -106,7 +106,7 @@ export class BooksService {
   // This removes a reference of a specific author to a specific book
   removeAuthorFromBook(authorId: number, bookId: number) {
     this.authorsService.findOne(authorId);
-    const book = this.findOne(authorId);
+    const book = this.findOne(bookId);
 
     const authorIndex = book.authorIds.indexOf(authorId);
     if (authorIndex === -1) {
