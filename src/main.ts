@@ -10,8 +10,6 @@ async function bootstrap() {
     .setTitle('Books & Authors API')
     .setDescription('The API for managing books and authors')
     .setVersion('1.0')
-    // .addTag('books')
-    // .addTag('authors')
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

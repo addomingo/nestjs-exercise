@@ -43,4 +43,30 @@ export class BooksController {
       throw new NotFoundException();
     }
   }
+
+  @Get('author/:authorId')
+  findAuthorsBooks(@Param('authorId', ParseIntPipe) authorId: number) {
+    return this.booksService.findAuthorsBooks(authorId);
+  }
+
+  @Get('genre/:genre')
+  findGenreBooks(genre: string) {
+    return this.booksService.findGenreBooks(genre);
+  }
+
+  @Patch(':bookId/add-author/:authorId')
+  addAuthorToBook(
+    @Param('bookId', ParseIntPipe) bookId: number,
+    @Param('authorId', ParseIntPipe) authorId: number,
+  ) {
+    return this.booksService.addAuthorToBook(authorId, bookId);
+  }
+
+  @Patch(':bookId/remove-author/:authorId')
+  removeAuthorToBook(
+    @Param('bookId', ParseIntPipe) bookId: number,
+    @Param('authorId', ParseIntPipe) authorId: number,
+  ) {
+    return this.booksService.removeAuthorFromBook(authorId, bookId);
+  }
 }

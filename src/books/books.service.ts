@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { Book, Genre } from './books.interface';
-import { BookDuplicateException } from './books.exception';
+import { BookDuplicateException, DuplicateAuthorBookReferenceException, InvalidBookGenreException, NonExistentAuthorBookReferenceException } from './books.exception';
 import { AuthorsService } from 'src/authors/authors.service';
 
 @Injectable()
@@ -42,7 +42,7 @@ export class BooksService {
 
   // This action returns a single Book
   findOne(id: number): Book {
-    const Book = this.books.find(Book => id === Book.id);
+    const Book = this.books.find(book => id === book.id);
     if (!Book) {
       throw new Error('Book not found');
     }
@@ -58,7 +58,7 @@ export class BooksService {
 
   // This action deletes a single Book
   remove(id: number) {
-    const index = this.books.findIndex((Book) => Book.id === id);
+    const index = this.books.findIndex((book) => book.id === id);
     if (index === -1) {
       throw new Error('Book not found');
     }
@@ -68,12 +68,51 @@ export class BooksService {
 
   
   // This action returns all books of a single author
-  findAuthorsBooks(id: number) {
+  findAuthorsBooks(authorId: number): Book[] {
+    try {
+      const author = this.authorsService.findOne(authorId);
+    } catch (err) {
+      throw new BadRequestException(`Author with ID ${authorId} does not exist`);
+    }
 
+    const books = this.books.filter((book) => book.authorIds.includes(authorId));
+    return books;
   }
 
   // This action returns all books that belongs to a specific genre
-  findGenreBooks(genre: Genre) {
+  findGenreBooks(genre: string) {
+    const isValidGenre = Object.values(Genre).includes(genre as Genre);
+    if (!isValidGenre) {
+      throw new InvalidBookGenreException(genre);
+    }
 
+    const books = this.books.filter((book) => book.genre.includes(genre as Genre));
+    return books;
+  }
+
+  // This adds a reference of a specific author to a specific book
+  addAuthorToBook(authorId: number, bookId: number) {
+    // const author = this.authorsService.findOne(authorId);
+    this.authorsService.findOne(authorId);
+    const book = this.findOne(authorId);
+
+    if (book.authorIds.includes(authorId)) {
+      throw new DuplicateAuthorBookReferenceException(authorId, bookId);
+    }
+
+    book.authorIds.push(authorId);
+  }
+
+  // This removes a reference of a specific author to a specific book
+  removeAuthorFromBook(authorId: number, bookId: number) {
+    this.authorsService.findOne(authorId);
+    const book = this.findOne(authorId);
+
+    const authorIndex = book.authorIds.indexOf(authorId);
+    if (authorIndex === -1) {
+      throw new NonExistentAuthorBookReferenceException(authorId, bookId);
+    }
+
+    book.authorIds.splice(authorIndex, 1);
   }
 }
