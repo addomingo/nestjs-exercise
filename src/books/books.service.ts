@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateBookDto } from './dto/create-book.dto';
 import { UpdateBookDto } from './dto/update-book.dto';
 import { Book } from './books.interface';
+import { BookDuplicateException } from './books.exception';
 
 @Injectable()
 export class BooksService {
@@ -10,6 +11,12 @@ export class BooksService {
 
   // This action adds a new Book
   create(createBookDto: CreateBookDto): Book {
+    const existingBook = this.books.find(book => createBookDto.name === book.name);
+
+    if (existingBook) {
+      throw new BookDuplicateException();
+    }
+
     const newBook: Book = {
       id: this.currId,
       ...createBookDto

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 import { Author } from './authors.interface';
+import { AuthorDuplicateException } from './authors.exception';
 
 @Injectable()
 export class AuthorsService {
@@ -10,11 +11,21 @@ export class AuthorsService {
 
   // This action adds a new author
   create(createAuthorDto: CreateAuthorDto): Author {
+    const existingAuthor = this.authors.find(author => 
+      (createAuthorDto.firstName === author.firstName) && (createAuthorDto.lastName === author.lastName)
+    );
+
+    if (existingAuthor) {
+      throw new AuthorDuplicateException();
+    }
+    
     const newAuthor: Author = {
       id: this.currId,
       firstName: createAuthorDto.firstName,
       lastName: createAuthorDto.lastName
     };
+
+    this.authors.push(newAuthor);
     this.currId++; // update id count
     return newAuthor;
   }
