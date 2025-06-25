@@ -65,4 +65,15 @@ export class BooksService {
     this.books.splice(index, 1);
     return 'Book deleted'
   }
+
+  
+  // This action returns all books of a single author
+  findAuthorsBooks(id: number) {
+
+  }
+
+  // This action returns all books that belongs to a specific genre
+  findGenreBooks(genre: Genre) {
+
+  }
 }
