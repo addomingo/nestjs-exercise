@@ -31,7 +31,9 @@ export class BooksService {
       id: this.currId,
       ...createBookDto
     };
+
     this.currId++; // update id count
+    this.books.push(newBook);
     return newBook;
   }
 
