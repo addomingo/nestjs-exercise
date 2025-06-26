@@ -3,61 +3,40 @@ import { CreateAuthorDto } from './dto/create-author.dto';
 import { UpdateAuthorDto } from './dto/update-author.dto';
 import { Author } from './authors.interface';
 import { AuthorDuplicateException } from './authors.exception';
+import { AuthorsDatabaseService } from './authors-database.service';
 
+/**
+ * Handles the business logic of Author operations.
+ */
 @Injectable()
 export class AuthorsService {
-  private readonly authors: Author[] = [];
-  private currId = 1;
 
-  // This action adds a new author
-  create(createAuthorDto: CreateAuthorDto): Author {
-    const existingAuthor = this.authors.find(author => 
+  constructor(private dbService: AuthorsDatabaseService) {} // CRUD service
+
+  createAuthor(createAuthorDto: CreateAuthorDto): Author {
+    const authors = this.dbService.findAll();
+    const existingAuthor = authors.find(author => 
       (createAuthorDto.firstName === author.firstName) && (createAuthorDto.lastName === author.lastName)
     );
 
-    if (existingAuthor) {
-      throw new AuthorDuplicateException();
-    }
-    
-    const newAuthor: Author = {
-      id: this.currId,
-      firstName: createAuthorDto.firstName,
-      lastName: createAuthorDto.lastName
-    };
-
-    this.authors.push(newAuthor);
-    this.currId++; // update id count
-    return newAuthor;
+    if (existingAuthor) throw new AuthorDuplicateException();
+    return this.dbService.create(createAuthorDto);
   }
 
-  // This action returns all authors
-  findAll(): Author[] {
-    return this.authors;
+  findAllAuthors(): Author[] {
+    return this.dbService.findAll();
   }
 
-  // This action returns a single author
-  findOne(id: number): Author {
-    const author = this.authors.find(author => id === author.id);
-    if (!author) {
-      throw new Error('Author not found');
-    }
-    return author;
+  findAuthor(id: number): Author {
+    return this.dbService.findOne(id);
   }
 
-  // This action updates a single author
-  update(id: number, updateAuthorDto: UpdateAuthorDto): Author {
-    const author = this.findOne(id);
-    Object.assign(author, updateAuthorDto); // assign properties of updateAuthorDto to the author object in the array
-    return author;
+  updateAuthor(id: number, updateAuthorDto: UpdateAuthorDto): Author {
+    return this.dbService.update(id, updateAuthorDto);
   }
 
-  // This action deletes a single author
-  remove(id: number) {
-    const index = this.authors.findIndex((author) => author.id === id);
-    if (index === -1) {
-      throw new Error('Author not found');
-    }
-    this.authors.splice(index, 1);
-    return 'Author deleted'
+  // hard deletion with validation
+  removeAuthor(id: number) {
+    return this.dbService.remove(id);
   }
 }

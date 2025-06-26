@@ -7,25 +7,22 @@ import { AuthorHasExistingBooksException } from './authors.exception';
 
 @Controller('authors')
 export class AuthorsController {
-  constructor(
-    private readonly authorsService: AuthorsService,
-    private readonly booksService: BooksService
-  ) {}
+  constructor(private readonly authorsService: AuthorsService) {}
 
   @Post()
   create(@Body(new ValidationPipe()) createAuthorDto: CreateAuthorDto) {
-    return this.authorsService.create(createAuthorDto);
+    return this.authorsService.createAuthor(createAuthorDto);
   }
 
   @Get()
   findAll() {
-    return this.authorsService.findAll();
+    return this.authorsService.findAllAuthors();
   }
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     try {
-      return this.authorsService.findOne(id);
+      return this.authorsService.findAuthor(id);
     } catch (err) {
       throw new NotFoundException();
     }
@@ -34,7 +31,7 @@ export class AuthorsController {
   @Patch(':id')
   update(@Param('id', ParseIntPipe) id: number, @Body(new ValidationPipe()) updateAuthorDto: UpdateAuthorDto) {
     try {
-      return this.authorsService.update(id, updateAuthorDto);
+      return this.authorsService.updateAuthor(id, updateAuthorDto);
     } catch (err) {
       throw new NotFoundException();
     }
@@ -42,12 +39,6 @@ export class AuthorsController {
 
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
-    const booksByAuthor = this.booksService.findAuthorsBooks(id);
-
-    if (booksByAuthor.length > 0) {
-      throw new AuthorHasExistingBooksException();
-    }
-
-    return this.authorsService.remove(id);
+    return this.authorsService.removeAuthor(id);
   }
 }
