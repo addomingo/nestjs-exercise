@@ -1,10 +1,10 @@
-import { forwardRef, Module } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { BooksService } from './books.service';
 import { BooksController } from './books.controller';
-import { AuthorsModule } from 'src/authors/authors.module';
+import { AuthorsDatabaseService } from 'src/authors/authors-database.service';
 
 @Module({
-  imports: [forwardRef(() => AuthorsModule)],
+  imports: [AuthorsDatabaseService],
   controllers: [BooksController],
   providers: [BooksService],
   exports: [BooksService]

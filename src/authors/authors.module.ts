@@ -5,9 +5,9 @@ import { BooksModule } from 'src/books/books.module';
 import { AuthorsDatabaseService } from './authors-database.service';
 
 @Module({
-  imports: [forwardRef(() => BooksModule)],
+  imports: [],
   controllers: [AuthorsController],
   providers: [AuthorsService, AuthorsDatabaseService],
-  exports: [AuthorsService]
+  exports: [AuthorsDatabaseService]
 })
 export class AuthorsModule {}

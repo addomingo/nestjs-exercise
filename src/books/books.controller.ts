@@ -9,18 +9,18 @@ export class BooksController {
 
   @Post()
   create(@Body(new ValidationPipe()) createBookDto: CreateBookDto) {
-    return this.booksService.create(createBookDto);
+    return this.booksService.createBook(createBookDto);
   }
 
   @Get()
   findAll() {
-    return this.booksService.findAll();
+    return this.booksService.findAllBooks();
   }
 
   @Get(':id')
   findOne(@Param('id', ParseIntPipe) id: number) {
     try {
-      return this.booksService.findOne(id);
+      return this.booksService.findBook(id);
     } catch (err) {
       throw new NotFoundException();
     }
@@ -29,7 +29,7 @@ export class BooksController {
   @Patch(':id')
   update(@Param('id', ParseIntPipe) id: number, @Body(new ValidationPipe()) updateBookDto: UpdateBookDto) {
     try {
-      return this.booksService.update(id, updateBookDto);
+      return this.booksService.updateBook(id, updateBookDto);
     } catch (err) {
       throw new NotFoundException();
     }
@@ -38,7 +38,7 @@ export class BooksController {
   @Delete(':id')
   remove(@Param('id', ParseIntPipe) id: number) {
     try {
-      return this.booksService.remove(id);
+      return this.booksService.removeBook(id);
     } catch (err) {
       throw new NotFoundException();
     }
@@ -46,12 +46,12 @@ export class BooksController {
 
   @Get('author/:authorId')
   findAuthorsBooks(@Param('authorId', ParseIntPipe) authorId: number) {
-    return this.booksService.findAuthorsBooks(authorId);
+    return this.booksService.findBooksByAuthor(authorId);
   }
 
   @Get('genre/:genre')
   findGenreBooks(genre: string) {
-    return this.booksService.findGenreBooks(genre);
+    return this.booksService.findBooksByGenre(genre);
   }
 
   @Patch(':bookId/add-author/:authorId')
