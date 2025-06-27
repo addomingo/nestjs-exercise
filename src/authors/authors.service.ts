@@ -32,23 +32,35 @@ export class AuthorsService {
   }
 
   findAuthor(id: number): Author {
-    return this.authorDbService.findOne(id);
+    try {
+      return this.authorDbService.findOne(id);
+    } catch (err) {
+      throw err;
+    }
   }
 
   updateAuthor(id: number, updateAuthorDto: UpdateAuthorDto): Author {
-    return this.authorDbService.update(id, updateAuthorDto);
+    try {
+      return this.authorDbService.update(id, updateAuthorDto);
+    } catch (err) {
+      throw err;
+    }
   }
 
   // hard deletion with validation
   removeAuthor(id: number) {
-    const books = this.booksDbService.findAll();
-    const booksByAuthor = books.filter((book) => book.authorIds.includes(id));
+    try {
+      const books = this.booksDbService.findAll();
+      const booksByAuthor = books.filter((book) => book.authorIds.includes(id));
 
-    if (booksByAuthor.length > 0){
-      throw new AuthorHasExistingBooksException();
+      if (booksByAuthor.length > 0){
+        throw new AuthorHasExistingBooksException();
+      }
+
+      return this.authorDbService.remove(id);
+    } catch (err) {
+      throw err;
     }
-
-    return this.authorDbService.remove(id);
   }
 
   // This action finds all the authors of a certain book

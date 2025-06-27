@@ -23,3 +23,9 @@ export class NonExistentAuthorBookReferenceException extends HttpException {
     super(`Author with ID ${authorId} is not associated with Book having ID ${bookId}`, HttpStatus.BAD_REQUEST);
   }
 }
+
+export class DuplicateAuthorReferencesInIDListException extends HttpException {
+  constructor() {
+    super(`Duplicate authors IDs in authorIds list.`, HttpStatus.BAD_REQUEST);
+  }
+}
