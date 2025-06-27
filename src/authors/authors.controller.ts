@@ -41,4 +41,13 @@ export class AuthorsController {
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.authorsService.removeAuthor(id);
   }
+
+  @Get(':bookId')
+  findBookAuthors(@Param('bookId', ParseIntPipe) bookId: number) {
+    try {
+      return this.authorsService.findBookAuthors(bookId);
+    } catch (err) {
+      throw new NotFoundException();
+    }
+  }
 }

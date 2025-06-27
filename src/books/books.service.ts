@@ -19,11 +19,13 @@ export class BooksService {
     const existingBook = books.find(book => createBookDto.name === book.name);
     if (existingBook) throw new BookDuplicateException();
 
-    for (const id of createBookDto.authorIds) {
-      try {
-        this.authorsDbService.findOne(id);
-      } catch (err) {
-        throw new BadRequestException(`Author with ID ${id} does not exist`);
+    if (createBookDto.authorIds){
+      for (const id of createBookDto.authorIds) {
+        try {
+          this.authorsDbService.findOne(id);
+        } catch (err) {
+          throw new BadRequestException(`Author with ID ${id} does not exist`);
+        }
       }
     }
 
@@ -74,26 +76,34 @@ export class BooksService {
   // This adds a reference of a specific author to a specific book
   addAuthorToBook(authorId: number, bookId: number) {
     // const author = this.authorsService.findOne(authorId);
-    this.authorsDbService.findOne(authorId);
-    const book = this.findBook(bookId);
+    try {
+      this.authorsDbService.findOne(authorId);
+      const book = this.findBook(bookId);
 
-    if (book.authorIds.includes(authorId)) {
-      throw new DuplicateAuthorBookReferenceException(authorId, bookId);
+      if (book.authorIds.includes(authorId)) {
+        throw new DuplicateAuthorBookReferenceException(authorId, bookId);
+      }
+
+      book.authorIds.push(authorId);
+    } catch (err) {
+      throw err;
     }
-
-    book.authorIds.push(authorId);
   }
 
   // This removes a reference of a specific author to a specific book
   removeAuthorFromBook(authorId: number, bookId: number) {
-    this.authorsDbService.findOne(authorId);
-    const book = this.findBook(bookId);
+    try {
+      this.authorsDbService.findOne(authorId);
+      const book = this.findBook(bookId);
 
-    const authorIndex = book.authorIds.indexOf(authorId);
-    if (authorIndex === -1) {
-      throw new NonExistentAuthorBookReferenceException(authorId, bookId);
+      const authorIndex = book.authorIds.indexOf(authorId);
+      if (authorIndex === -1) {
+        throw new NonExistentAuthorBookReferenceException(authorId, bookId);
+      }
+
+      book.authorIds.splice(authorIndex, 1);
+    } catch (err) {
+      throw err;
     }
-
-    book.authorIds.splice(authorIndex, 1);
   }
 }

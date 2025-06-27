@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Author } from 'src/interfaces/author';
 import { CreateAuthorDto } from 'src/interfaces/dto/create-author.dto';
 import { UpdateAuthorDto } from 'src/interfaces/dto/update-author.dto';
@@ -33,7 +33,7 @@ export class AuthorsDatabaseService {
   findOne(id: number): Author {
     const author = this.authors.find(author => id === author.id);
     if (!author) {
-      throw new Error('Author not found');
+      throw new NotFoundException('Author not found');
     }
     return author;
   }
@@ -49,7 +49,7 @@ export class AuthorsDatabaseService {
   remove(id: number) {
     const index = this.authors.findIndex((author) => author.id === id);
     if (index === -1) {
-      throw new Error('Author not found');
+      throw new NotFoundException('Author not found');
     }
     this.authors.splice(index, 1);
     return 'Author deleted'

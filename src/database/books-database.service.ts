@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Book } from 'src/interfaces/book';
 import { CreateBookDto } from 'src/interfaces/dto/create-book.dto';
 import { UpdateBookDto } from 'src/interfaces/dto/update-book.dto';
@@ -12,10 +12,17 @@ export class BooksDatabaseService {
   private currId = 1;
 
   // This action adds a new Book
-  create(createBookDto: CreateBookDto): Book {
+  create(createBookDto: CreateBookDto): Book {    
+    // set initial values to optional fields
+    const transformedBook = {
+      ...createBookDto,
+      authorIds: createBookDto.authorIds ?? [],
+      coverImage: createBookDto.coverImage ?? ""
+    }
+    
     const newBook: Book = {
       id: this.currId,
-      ...createBookDto
+      ...transformedBook
     };
 
     this.currId++; // update id count
@@ -32,7 +39,7 @@ export class BooksDatabaseService {
   findOne(id: number): Book {
     const book = this.books.find(book => id === book.id);
     if (!book) {
-      throw new Error('Book not found');
+      throw new NotFoundException('Book not found');
     }
     return book;
   }
@@ -48,7 +55,7 @@ export class BooksDatabaseService {
   remove(id: number) {
     const index = this.books.findIndex((book) => book.id === id);
     if (index === -1) {
-      throw new Error('Book not found');
+      throw new NotFoundException('Book not found');
     }
     this.books.splice(index, 1);
     return 'Book deleted'

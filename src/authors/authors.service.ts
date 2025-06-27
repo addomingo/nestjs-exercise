@@ -50,4 +50,15 @@ export class AuthorsService {
 
     return this.authorDbService.remove(id);
   }
+
+  // This action finds all the authors of a certain book
+  findBookAuthors(bookId: number): Author[] {
+    try {
+      const book = this.booksDbService.findOne(bookId);
+      const authorList = book.authorIds.map((id) => this.authorDbService.findOne(id));
+      return authorList;
+    } catch (err) {
+      throw err;
+    }
+  }
 }
