@@ -1,7 +1,7 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateBookDto } from './dto/create-book.dto';
-import { UpdateBookDto } from './dto/update-book.dto';
-import { Book, Genre } from './books.interface';
+import { Injectable } from '@nestjs/common';
+import { Book } from 'src/interfaces/book';
+import { CreateBookDto } from 'src/interfaces/dto/create-book.dto';
+import { UpdateBookDto } from 'src/interfaces/dto/update-book.dto';
 
 /**
  * This service's sole purpose is to provide CRUD operations that directly communicate with in-memory books data.

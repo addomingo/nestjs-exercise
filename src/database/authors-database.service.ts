@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { CreateAuthorDto } from './dto/create-author.dto';
-import { UpdateAuthorDto } from './dto/update-author.dto';
-import { Author } from './authors.interface';
+import { Author } from 'src/interfaces/author';
+import { CreateAuthorDto } from 'src/interfaces/dto/create-author.dto';
+import { UpdateAuthorDto } from 'src/interfaces/dto/update-author.dto';
 
 /**
  * This service's sole purpose is to provide CRUD operations that directly communicate with in-memory data.

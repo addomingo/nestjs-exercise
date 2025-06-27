@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, NotFoundException, ParseIntPipe, ValidationPipe } from '@nestjs/common';
 import { AuthorsService } from './authors.service';
-import { CreateAuthorDto } from './dto/create-author.dto';
-import { UpdateAuthorDto } from './dto/update-author.dto';
+import { CreateAuthorDto } from '../interfaces/dto/create-author.dto';
+import { UpdateAuthorDto } from '../interfaces/dto/update-author.dto';
 import { BooksService } from 'src/books/books.service';
 import { AuthorHasExistingBooksException } from './authors.exception';
 

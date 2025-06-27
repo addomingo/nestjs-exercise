@@ -1,10 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { CreateBookDto } from './dto/create-book.dto';
-import { UpdateBookDto } from './dto/update-book.dto';
-import { Book, Genre } from './books.interface';
+import { Book, Genre } from '../interfaces/book';
+import { CreateBookDto } from 'src/interfaces/dto/create-book.dto';
+import { UpdateBookDto } from 'src/interfaces/dto/update-book.dto';
 import { BookDuplicateException, DuplicateAuthorBookReferenceException, InvalidBookGenreException, NonExistentAuthorBookReferenceException } from './books.exception';
-import { BooksDatabaseService } from './books-database.service';
-import { AuthorsDatabaseService } from 'src/authors/authors-database.service';
+import { BooksDatabaseService } from 'src/database/books-database.service';
+import { AuthorsDatabaseService } from 'src/database/authors-database.service';
 
 @Injectable()
 export class BooksService {

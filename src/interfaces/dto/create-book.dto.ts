@@ -1,5 +1,5 @@
 import { ArrayNotEmpty, IsArray, IsDateString, IsEnum, IsInt, IsOptional, IsString, MinLength } from "class-validator";
-import { Genre } from "../books.interface";
+import { Genre } from "../../interfaces/book";
 
 export class CreateBookDto {
     @IsString()
